@@ -2,6 +2,11 @@
     <div class="work">
         <!-- 标签栏 -->
         <div class="tab-header" :style="{ '--tab-color': tabs[currentTab].tabColor }">
+            
+                <RouterLink :to="{ name: 'home' }">
+                    <div id="to-home">首页</div>
+                </RouterLink>
+            
             <div
                 v-for="(tab, index) in tabs"
                 :key="index"
@@ -46,6 +51,15 @@
         align-items: center;
     }
 
+    #to-home {
+        color: $color-theme;
+
+        &:hover {
+            background: $color-green;
+            color: $color-white;
+        }
+    }
+
     .tab-header div {
         padding: 15px 30px;
         cursor: pointer;
@@ -64,7 +78,7 @@
         transition: width .3s, border .3s;
     }
 
-    input[type=text]:focus {
+    input[type=text]:focus, input[type=text]:hover {
         width: 250px;
         border: 2px solid $color-theme;
     }

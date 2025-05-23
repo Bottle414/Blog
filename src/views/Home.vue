@@ -2,7 +2,7 @@
     <div class="home">
         <header>
             <nav id="navigation">
-                <TopBar/>
+                <TopBar />
             </nav>
 
             <div id="welcome" ref="welcome">
@@ -18,7 +18,7 @@
 
         <ScrollDown id="scroll-down" />
 
-        <section ref="section">
+        <section class="ribbon" ref="section">
             <img
                 id="author-img"
                 draggable="false"
@@ -34,16 +34,18 @@
             </div>
         </section>
 
-        <!-- <div id="sentence1" use>
-            <p>如你所见</p>
-            <p>它还不是那么完善</p>
-        </div>
-
-        <div id="sentence2">
-            <p>别担心</p>
-            <p>它还在成长</p>
-            <p>就像我们每一个人</p>
-        </div> -->
+        <section class="introduce">
+            <div id="sentence1" ref="sentence1">
+                <p>如你所见</p>
+                <p>它还不是那么完善</p>
+            </div>
+    
+            <div id="sentence2" ref="sentence2">
+                <p>别担心</p>
+                <p>它还在成长</p>
+                <p>就像我们每一个人</p>
+            </div>
+        </section>
 
         <footer></footer>
     </div>
@@ -58,13 +60,23 @@
 
     const sectionRef = useTemplateRef<HTMLElement>('section')
     const welcomeRef = useTemplateRef<HTMLElement>('welcome')
+    const sentence1Ref = useTemplateRef<HTMLElement>('sentence1')
+    const sentence2Ref = useTemplateRef<HTMLElement>('sentence2')
 
     const throttleScroll = throttle(() => {
         if (!sectionRef.value || !welcomeRef.value) return
         const curScrollY = window.scrollY
-        sectionRef.value.style.top = -curScrollY * 0.5 + 'px'
+        const translateYValue = curScrollY * 0.5
+        sectionRef.value.style.transform = `translateY(-${translateYValue}px)`// 比起top, 推荐transform
+
         if (curScrollY >= 80) welcomeRef.value.style.opacity = '0'
         else welcomeRef.value.style.opacity = '1'
+
+        const classList = sentence1Ref.value?.classList
+        if (curScrollY >=800){
+            if (!classList?.contains('slideIn')) classList?.add('slideIn')
+        }
+
     }, 10)
 
     window.addEventListener('scroll', throttleScroll)
@@ -118,14 +130,16 @@
         left: 50%;
     }
 
-    section {
-        position: relative;
+    section.ribbon {
+        position: absolute;
         display: flex;
         padding: 5%;
         width: 100%;
         height: 600px;
+        top: 90vh;
         align-items: center;
         background: $color-grey;
+        z-index: 2;
 
         #author-img {
             position: absolute;
@@ -153,11 +167,35 @@
         }
     }
 
-    footer {
+    section.introduce {
         position: relative;
-        bottom: 0;
+        top: 10vh;
         width: 100%;
-        height: 500px;
+        height: 800px;
+        background: url('@/assets/image4.png');
+        background-position: center;
+        background-size: contain;
+        color: $color-white;
+        
+        p {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .sentence1 {
+            position: absolute;
+            top: 110vh;
+        }
+
+        .sentence2 {
+            position: absolute;
+            top: 110vh;
+        }
+    }
+
+    footer {
+        width: 100%;
+        height: 600px;
         background: $color-black;
     }
 

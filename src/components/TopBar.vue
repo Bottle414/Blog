@@ -3,7 +3,7 @@
         <span id="name">风的叶脉</span>
 
         <div class="nav-right">
-            <RouterLink :to="{ path: 'work' }">作品</RouterLink>
+            <RouterLink :to="{ path: 'work/article' }">作品</RouterLink>
             <RouterLink :to="{ path: 'about' }">关于我</RouterLink>
             <RouterLink :to="{ path: 'contact' }">与我合作</RouterLink>
 
