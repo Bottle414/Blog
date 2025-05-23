@@ -7,7 +7,7 @@
 
 <script lang="ts" setup></script>
 
-<style scoped lang="scss">
+<style lang="scss">
     .scroll-down {
         display: flex;
         position: absolute;

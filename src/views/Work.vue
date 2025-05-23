@@ -11,7 +11,7 @@
                 v-for="(tab, index) in tabs"
                 :key="index"
                 :class="{ active: currentTab === index }"
-                @click="currentTab = index"
+                @click="changeTab(index)"
             >
                 {{ tab.label }}
             </div>
@@ -32,14 +32,20 @@
     import Articles from '@/views/tabs/Articles.vue'
     import Projects from '@/views/tabs/Projects.vue'
     import Demos from '@/views/tabs/Demos.vue'
+    import router from '@/router/index.ts'
 
     const currentTab = ref(0)
 
     const tabs = [
-        { label: '文章', component: Articles, tabColor: '#65A1F0' },
-        { label: '项目', component: Projects, tabColor: '#EEA84E'},
-        { label: 'Demo', component: Demos, tabColor: '#91C46C' }
+        { label: '文章', name: 'article', component: Articles, tabColor: '#65A1F0' },
+        { label: '项目', name: 'project', component: Projects, tabColor: '#EEA84E'},
+        { label: 'Demo', name: 'demo', component: Demos, tabColor: '#91C46C' }
     ]
+
+    function changeTab(index: number){
+        currentTab.value = index
+        router.push(`/work/${ tabs[index].name }`)
+    }
 </script>
 
 <style scoped lang="scss">
@@ -89,7 +95,10 @@
     }
 
     .tab-content {
-        width: 100%;
+        position: relative;
+        width: 100vw;
+        height: 89vh;
+        overflow: hidden;
         border: 1px solid $color-deep-grey;
     }
 </style>
