@@ -2,19 +2,14 @@
     <div class="home">
         <header>
             <nav id="navigation">
-                <span id="name">风的叶脉</span>
-
-                <div class="nav-right">
-                    <RouterLink :to="{ path: 'work' }">作品</RouterLink>
-                    <RouterLink :to="{ path: 'about' }">关于我</RouterLink>
-                    <RouterLink :to="{ path: 'contact' }">与我合作</RouterLink>
-
-                    <button id="register-btn">登录</button>
-                </div>
+                <TopBar/>
             </nav>
 
-            <div id="welcome">
-                <TypeWriter content="你好啊, 远道而来的朋友" />
+            <div id="welcome" ref="welcome">
+                <TypeWriter
+                    font-size="2.5rem"
+                    content="你好啊, 远道而来的朋友"
+                />
                 <p class="zh"></p>
                 <p class="en">WELCOME TO MY BLOG. MAY THE PEACE BE WITH US</p>
                 <p class="log">—— 旅程本身就是奖赏</p>
@@ -34,8 +29,21 @@
             <div class="card">
                 <p>Hi, 我是风的叶脉</p>
                 <p>欢迎来到我的个人博客</p>
+                <p>很高兴见到你！</p>
+                <p>Github链接: <a href="./">Bottle414</a></p>
             </div>
         </section>
+
+        <!-- <div id="sentence1" use>
+            <p>如你所见</p>
+            <p>它还不是那么完善</p>
+        </div>
+
+        <div id="sentence2">
+            <p>别担心</p>
+            <p>它还在成长</p>
+            <p>就像我们每一个人</p>
+        </div> -->
 
         <footer></footer>
     </div>
@@ -45,28 +53,21 @@
     import { useTemplateRef } from 'vue'
     import ScrollDown from '@/components/ScrollDown.vue'
     import TypeWriter from '@/components/TypeWriter.vue'
+    import TopBar from '@/components/TopBar.vue'
     import throttle from '@/utils/throttle.ts'
 
-    const section = useTemplateRef<HTMLElement>('section')
+    const sectionRef = useTemplateRef<HTMLElement>('section')
+    const welcomeRef = useTemplateRef<HTMLElement>('welcome')
+
     const throttleScroll = throttle(() => {
-        console.log('triggle!')
-        if (!section.value) return
-        section.value.style.top = -window.scrollY * 0.5 + 'px'
+        if (!sectionRef.value || !welcomeRef.value) return
+        const curScrollY = window.scrollY
+        sectionRef.value.style.top = -curScrollY * 0.5 + 'px'
+        if (curScrollY >= 80) welcomeRef.value.style.opacity = '0'
+        else welcomeRef.value.style.opacity = '1'
     }, 10)
 
     window.addEventListener('scroll', throttleScroll)
-
-    // 当文字进入视口，opacity变成1并向上跳跃 animation改成在active时候加
-    const cardObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-                // 选中文字，播放动画
-                // const introduce = document.querySelector('.card')
-
-                cardObserver.unobserve(entry.target)
-            }
-        })
-    })
 </script>
 
 <style scoped lang="scss">
@@ -80,26 +81,7 @@
             position: sticky;
             top: 0;
             padding: 2%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        #name {
-            font-size: 2rem;
-            color: $color-white;
-        }
-
-        .nav-right {
-            display: flex;
-            min-width: 300px;
-            gap: 5%;
-            font-size: 1.2rem;
-            user-select: none;
-
-            a {
-                color: $color-white;
-            }
+            width: 100%;
         }
 
         #welcome {
@@ -112,13 +94,12 @@
             transform: translate(-50%, -50%);
             color: $color-white;
             text-wrap: nowrap;
+            transition: opacity 1s ease;
 
             .zh,
             .en {
                 margin: 0;
-                text-shadow:
-                    1px 1px 1px rgba(100, 100, 100, 0.2),
-                    1px 2px 2px rgba(100, 100, 100, 0.1);
+                text-shadow: $shadow-light, $shadow-deep;
             }
 
             .zh {
@@ -145,13 +126,15 @@
         height: 600px;
         align-items: center;
         background: $color-grey;
-        box-shadow: 2px 2px 2px $color-grey;
 
         #author-img {
             position: absolute;
             width: 30%;
+            max-width: 350px;
             aspect-ratio: 1 / 1;
             border-radius: 100%;
+            border: 1px solid $color-white;
+            box-shadow: $shadow-light;
         }
 
         .card {
@@ -162,6 +145,7 @@
             box-shadow: 1px 2px 2px rgba(100, 100, 100, 0.2);
             border: 1px solid $color-theme;
             border-radius: 10px;
+            text-align: center;
 
             p {
                 font-size: 1.2rem;
@@ -171,8 +155,20 @@
 
     footer {
         position: relative;
+        bottom: 0;
         width: 100%;
-        height: 400px;
+        height: 500px;
         background: $color-black;
     }
+
+    /* @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-50%);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    } */
 </style>
