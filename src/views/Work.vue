@@ -22,30 +22,35 @@
 
         <!-- 内容区域 -->
         <div class="tab-content">
-            <component :is="tabs[currentTab].component" />
+            <!-- <component :is="tabs[currentTab].component" /> 不是子路由，刷新会重置-->
+            <RouterView></RouterView>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-    import { ref } from 'vue'
-    import Articles from '@/views/tabs/Articles.vue'
-    import Projects from '@/views/tabs/Projects.vue'
-    import Demos from '@/views/tabs/Demos.vue'
+    import { ref, onMounted } from 'vue'
     import router from '@/router/index.ts'
+    import { storeToLocal, getFromLocal } from '@/utils/local.ts'
 
     const currentTab = ref(0)
 
     const tabs = [
-        { label: '文章', name: 'article', component: Articles, tabColor: '#65A1F0' },
-        { label: '项目', name: 'project', component: Projects, tabColor: '#EEA84E'},
-        { label: 'Demo', name: 'demo', component: Demos, tabColor: '#91C46C' }
+        { label: '文章', name: 'article/HTML', tabColor: '#65A1F0' },
+        { label: '项目', name: 'project', tabColor: '#EEA84E'},
+        { label: 'Demo', name: 'demo', tabColor: '#91C46C' }
     ]
 
     function changeTab(index: number){
         currentTab.value = index
         router.push(`/work/${ tabs[index].name }`)
+        storeToLocal('curTab', currentTab.value)
     }
+
+    onMounted(() => {
+        currentTab.value = getFromLocal('curTab')
+        console.log(currentTab.value);
+    })
 </script>
 
 <style scoped lang="scss">
@@ -96,9 +101,9 @@
 
     .tab-content {
         position: relative;
-        width: 100vw;
+        width: 100%;
         height: 89vh;
-        overflow: hidden;
+        overflow-x: hidden;
         border: 1px solid $color-deep-grey;
     }
 </style>
