@@ -1,23 +1,32 @@
 <template>
-    <div class='article-detail' @click="handleClick">
-        <div class="article-img" :style="{ backgroundImage: `url(${detailSrc})` }"></div>
-        <h1>{{ title }}</h1>
+    <div class="article-detail" @click="handleClick">
+        <div
+            class="article-img"
+            :style="{ backgroundImage: `url(${detailSrc})` }"
+        ></div>
+        <RouterLink :to="{ name:'article-page' }">
+            <h1>{{ title }}</h1>
+        </RouterLink>
         <p>
             {{ detail }}
         </p>
     </div>
 </template>
 
-<script lang='ts' setup>
+<script lang="ts" setup>
     import img1 from '@/assets/image1.png'
     defineProps({
         detailSrc: {
             type: String,
-            default: img1// 直接把路径写进来，vue不会解析
+            default: img1 // 直接把路径写进来，vue不会解析
         },
         title: {
             type: String,
             default: '无标题'
+        },
+        category: {
+            type: String,
+            default: '未分类'
         },
         detail: {
             type: String,
@@ -27,10 +36,9 @@
 
     const emits = defineEmits(['click'])
 
-    function handleClick(){
+    function handleClick() {
         emits('click')
     }
-    
 </script>
 
 <style scoped lang="scss">
@@ -38,6 +46,15 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+    }
+
+    a,
+    a:active {
+        color: $color-black;
+    }
+
+    a:hover {
+        color: $color-theme;
     }
 
     .article-detail {
@@ -56,7 +73,7 @@
             float: left;
             margin: 0 10px 0 0;
             aspect-ratio: 4 / 3;
-            background-position: center;/* 当一开始设置的行内是background(很多backgound属性的缩写), 再这样写就会被行内style覆盖完毕 */
+            background-position: center; /* 当一开始设置的行内是background(很多backgound属性的缩写), 再这样写就会被行内style覆盖完毕 */
             background-size: contain;
             border-radius: 8px;
         }

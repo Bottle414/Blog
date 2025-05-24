@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
-import ArticleDetail from '@/components/ArticleDetail.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,10 +15,30 @@ const router = createRouter({
       component: () => import('@/views/Work.vue'),
       children: [
         {
-          path: ':topic',
-          component: ArticleDetail,
-          props: route => ({ topic: route.params.topic }) // 可选：传参
+          path: 'article',
+          name: 'article',
+          component: () => import('@/views/tabs/Articles.vue'),
+          children: [
+            {
+              path: ':category',
+              name: 'category',
+              component: () => import('@/components/ArticleDetail.vue'), // html css之类的分类
+            }
+          ]
+        },
+        {
+          path: 'article-page',
+          name: 'article-page',
+          component: () => import('@/views/ArticlePage.vue')
+        },
+        {
+          path: 'project',
+          component: () => import('@/views/tabs/Projects.vue')
         }
+        ,{
+          path: 'demo',
+          component: () => import('@/views/tabs/Demos.vue')
+        },
       ]
     },
     {
